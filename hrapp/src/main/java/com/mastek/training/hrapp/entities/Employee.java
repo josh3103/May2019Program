@@ -1,12 +1,33 @@
 package com.mastek.training.hrapp.entities;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype") // one copy for each test
-public class Employee {
+@Entity // declares the class as an Entity
+@Table(name="JPA_Employee") // declaring the table name for the class
+@EntityListeners({EmployeeLifeCycleListener.class})
+@NamedQueries({
+	@NamedQuery(name="Employee.findBySalary",
+			query="select e from Employee e where e.salary between :min and :max")
+	
+})
+public class Employee
+	implements Serializable { //manage serialisation of objects
 	
 	@Value("-1")
 	private int empno;
@@ -21,7 +42,11 @@ public class Employee {
 		System.out.println("Employee Created");
 		
 	}
-
+	
+	@Id // declare the property as primary key
+	@Column(name="employee_number") // declare the name of the column 
+	@GeneratedValue(strategy=GenerationType.AUTO) // Auto-numbering
+	
 	public int getEmpno() {
 		return empno;
 	}
@@ -29,7 +54,7 @@ public class Employee {
 	public void setEmpno(int empno) {
 		this.empno = empno;
 	}
-
+	@Column(name="employee_name",nullable=false,length=45)
 	public String getName() {
 		return name;
 	}

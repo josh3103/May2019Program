@@ -1,5 +1,12 @@
 package com.mastek.training.hrapp;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +36,46 @@ public class HrAppApplicationTests {
 	
 	@Test
 	public void addEmployeeUsingService() {
-		/*Employee emp = new Employee();
-		emp.setEmpno(122);
-		emp.setName("Example");
-		emp.setSalary(333);*/
-		empService.registerEmployee(emp);
+		//Employee emp = new Employee();
+		emp.setEmpno(5);
+		emp.setName("New Emp 1");
+		emp.setSalary(55);
+		empService.registerOrUpdateEmployee(emp);
+		assertNotNull(emp);
 	}
+	
+	@Test
+	public void findByEmpnoUsingService() {
+		int empno = 1;
+		assertNotNull(empService.findByEmpno(empno));
+		
+	}
+	
+	@Test
+	public void deleteByEmpnoUsingService() {
+		int empno = 2;
+		empService.deleteByEmpno(empno);
+		assertNull(empService.findByEmpno(empno));
+		
+	}
+	
+	@Test
+	public void checkFetchBySalary() {
+		List<Employee> emps = empService
+				.fetchEmployeesBySalaryRange(0, 1000);
+			for (Employee employee : emps) {
+				System.out.println("employee");
+			}
+			assertEquals(emps.size(),2);
+			
+	}
+	
+/*	@Test
+	public void findByEmpno() {
+		int empno=2;
+		empService.deleteByEmpno(empno);
+		assertNull(empService.findByEmpno(empno));
+	} */
 	
 	
 	@Test
