@@ -1,13 +1,20 @@
 package com.mastek.training.hrapp.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -38,7 +45,41 @@ public class Employee
 	@Value("100.0")
 	private double salary;
 	
-	public Employee( ) {
+	private Set<Project> assignments = new HashSet<>();
+	//@ManyToMany: configuring the association for both the entities
+	//@JoinTable: provides all the configuration for the third table
+	//name: name of the join table
+	//inverseJoinColumns: foreign key column for other class
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(
+			name="JPA_ASSIGNMENTS",
+			joinColumns=@JoinColumn(name="FK_EMPNO"),
+			inverseJoinColumns=@JoinColumn(name="FK_PROJECTID")
+	)
+	
+	public Set<Project> getAssignments() {
+		return assignments;
+	}
+	
+	
+	//@ManytoOnethis is mapping many to one, each employee belongs to one department
+	private Department currentDepartment;
+	
+	//ManyToOne: associating the many class to one object
+	//JoinColumn: configure the foreign key column
+	// for the association between two entities
+	
+	@ManyToOne
+	@JoinColumn(name="FK_DepartmentId")
+	public Department getCurrentDepartment() {
+		return currentDepartment;
+	}
+
+	public void setCurrentDepartment(Department currentDepartment) {
+		this.currentDepartment = currentDepartment;
+	}
+
+	public Employee() {
 		System.out.println("Employee Created");
 		
 	}
